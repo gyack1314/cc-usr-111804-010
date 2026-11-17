@@ -2,7 +2,8 @@
   "kind": "interface_spec",
   "id": "interface_spec-A",
   "revision": "v1",
-  "period": "2026-11-13",
-  "subject": "sample-A",
-  "state": "corrected-copy"
+  "interface_revision": "v2",
+  "component_model": "hand-H",
+  "supplier": "供应商甲",
+  "variant": "conflicting-copy"
 }

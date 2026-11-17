@@ -1,8 +1,8 @@
 {
   "kind": "component_report",
-  "id": "component_report-B",
+  "id": "component_report-A",
   "revision": "v1",
-  "period": "2026-11-13",
-  "subject": "sample-A",
-  "state": "pending"
+  "interface_revision": "v2",
+  "test_batch": "B-2",
+  "report_no": "R-2"
 }

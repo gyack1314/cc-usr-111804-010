@@ -1,0 +1,24 @@
+{
+  "roles": [
+    "interface_spec",
+    "component_report"
+  ],
+  "relation_field": "interface_revision",
+  "required_fields": {
+    "interface_spec": [
+      "interface_revision",
+      "component_model",
+      "supplier"
+    ],
+    "component_report": [
+      "interface_revision",
+      "test_batch",
+      "report_no"
+    ]
+  },
+  "source_identity": [
+    "kind",
+    "id",
+    "revision"
+  ]
+}
