@@ -1,4 +1,4 @@
-"""A frozen source set survives restart and a released view stays immutable."""
+"""来源进度在重启后仍可接续，已发布视图保持原状。"""
 import tempfile
 import unittest
 from pathlib import Path

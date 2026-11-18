@@ -1,6 +1,4 @@
-"""Receive a frozen source set with durable per-source progress."""
-import json
-from pathlib import Path
+"""接收冻结来源，并持久记录每份原文的进度。"""
 from .transport import Replay
 from .ledger import receive
 
@@ -12,7 +10,7 @@ def initialize(connection):
     connection.commit()
 
 def collect(connection, collection, manifest_path):
-    """Replay every listed source, accepting already received bytes on restart."""
+    """按清单重放来源，重启后接续已经接收的相同字节。"""
     initialize(connection)
     replay = Replay(manifest_path)
     result = []

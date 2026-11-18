@@ -1,4 +1,4 @@
-"""Preserve the sources behind a released collection view."""
+"""保留已发布资料视图所引用的来源状态。"""
 import json
 from .view import overview
 
