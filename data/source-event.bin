@@ -1,0 +1,13 @@
+{
+  "kind": "delivery_manifest",
+  "id": "delivery_manifest-A",
+  "revision": "v1",
+  "interface_revision": "v2",
+  "component_model": "hand-H",
+  "supplier": "供应商甲",
+  "report_no": "R-2",
+  "parts": [
+    "hand-H",
+    "joint-J"
+  ]
+}

@@ -1,7 +1,8 @@
 {
   "roles": [
     "interface_spec",
-    "component_report"
+    "component_report",
+    "delivery_manifest"
   ],
   "relation_field": "interface_revision",
   "required_fields": {
@@ -14,6 +15,13 @@
       "interface_revision",
       "test_batch",
       "report_no"
+    ],
+    "delivery_manifest": [
+      "interface_revision",
+      "component_model",
+      "supplier",
+      "report_no",
+      "parts"
     ]
   },
   "source_identity": [

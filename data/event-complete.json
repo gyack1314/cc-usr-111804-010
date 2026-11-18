@@ -1,0 +1,37 @@
+{
+  "allowed_origins": [
+    "https://local-source-010.example.test"
+  ],
+  "sources": [
+    {
+      "url": "https://local-source-010.example.test/records/interface_spec-A",
+      "kind": "interface_spec",
+      "required": true
+    },
+    {
+      "url": "https://local-source-010.example.test/records/component_report-B",
+      "kind": "component_report",
+      "required": true
+    },
+    {
+      "url": "https://local-source-010.example.test/records/delivery_manifest-A",
+      "kind": "delivery_manifest",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://local-source-010.example.test/records/delivery_manifest-A",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "response": {
+        "file": "source-event.bin",
+        "status": 200,
+        "bytes": 243,
+        "sha256": "1de3e10cc60f881e3b6d036e9e6cfba00694685db59ca7575714d4dbd3b856f5"
+      }
+    }
+  ]
+}
