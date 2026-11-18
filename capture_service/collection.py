@@ -1,3 +1,5 @@
+from .ledger import entities
+from .domain import assess
 """按来源清单接收原文，持久保存待收范围与接收进度。"""
 import json
 from pathlib import Path
@@ -52,7 +54,7 @@ def progress(connection, collection):
                 (collection,))]
 
 def coverage(connection, collection):
-    """以来源目录为准区分已接收、待接收和非必需资料。"""
+    """Report transport progress and which declared sources are business verified."""
     initialize(connection)
     rows = connection.execute(
         'SELECT s.source_url,s.source_kind,s.required,COUNT(p.body_sha256) '
@@ -60,7 +62,18 @@ def coverage(connection, collection):
         'ON p.collection=s.collection AND p.source_url=s.source_url '
         'WHERE s.collection=? GROUP BY s.source_url,s.source_kind,s.required ORDER BY s.source_url',
         (collection,)).fetchall()
+    view = assess(entities(connection, collection))
+    verified = {source for pair in view['matched_pairs']
+                for source in (pair['left_source'], pair['right_source'])}
+    sources = []
+    for url, kind, required, received in rows:
+        sources.append(dict(url=url, kind=kind, required=bool(required),
+                            received_versions=received,
+                            verified=any(digest in verified for digest, in connection.execute(
+                                'SELECT body_sha256 FROM collection_progress WHERE collection=? AND source_url=?',
+                                (collection, url)))))
     return {'expected': len(rows), 'received': sum(bool(row[3]) for row in rows),
             'missing_required': [row[0] for row in rows if row[2] and not row[3]],
-            'sources': [dict(url=row[0], kind=row[1], required=bool(row[2]),
-                             received_versions=row[3]) for row in rows]}
+            'unverified_required': [item['url'] for item in sources
+                                    if item['required'] and not item['verified']],
+            'sources': sources}
