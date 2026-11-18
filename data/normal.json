@@ -34,12 +34,14 @@
     {
       "url": "https://local-source-010.example.test/records/interface_spec-A",
       "kind": "interface_spec",
-      "required": true
+      "required": true,
+      "expected_revision": "v1"
     },
     {
       "url": "https://local-source-010.example.test/records/component_report-B",
       "kind": "component_report",
-      "required": true
+      "required": true,
+      "expected_revision": "v1"
     }
   ]
 }
