@@ -17,6 +17,9 @@ class RevisionFrontier(unittest.TestCase):
             old=release_verified(c,'sample')
             frozen=get(c,'sample',old)
             register_sources(c,'sample',ROOT/'data'/'revised.json')
+            self.assertEqual(c.execute(
+                'SELECT expected_revision FROM collection_sources WHERE collection=? AND source_kind=?',
+                ('sample', 'interface_spec')).fetchone()[0], 'v2')
             self.assertEqual(coverage(c,'sample')['unverified_required'],[])
             self.assertTrue(overview(c,'sample')['publishable'])
             release_verified(c,'sample')

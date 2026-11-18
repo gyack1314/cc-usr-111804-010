@@ -10,6 +10,7 @@ def initialize(connection):
     connection.execute("""CREATE TABLE IF NOT EXISTS collection_sources (
       collection TEXT NOT NULL, source_url TEXT NOT NULL,
       source_kind TEXT NOT NULL, required INTEGER NOT NULL,
+      expected_revision TEXT NOT NULL DEFAULT '',
       PRIMARY KEY(collection, source_url))""")
     connection.execute("""CREATE TABLE IF NOT EXISTS collection_progress (
       collection TEXT NOT NULL, source_url TEXT NOT NULL,
@@ -25,10 +26,11 @@ def register_sources(connection, collection, manifest_path):
     with connection:
         for source in sources:
             connection.execute(
-                'INSERT INTO collection_sources(collection,source_url,source_kind,required) '
-                'VALUES(?,?,?,?) ON CONFLICT(collection,source_url) DO UPDATE SET '
-                'source_kind=excluded.source_kind,required=excluded.required',
-                (collection, source['url'], source['kind'], int(source.get('required', True))))
+                'INSERT INTO collection_sources(collection,source_url,source_kind,required,expected_revision) '
+                'VALUES(?,?,?,?,?) ON CONFLICT(collection,source_url) DO UPDATE SET '
+                'source_kind=excluded.source_kind,required=excluded.required,expected_revision=excluded.expected_revision',
+                (collection, source['url'], source['kind'], int(source.get('required', True)),
+                 source.get('expected_revision', '')))
 
 def collect(connection, collection, manifest_path):
     """按清单重放来源，重启后接续已经接收的相同字节。"""
