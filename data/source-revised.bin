@@ -1,0 +1,8 @@
+{
+  "kind": "interface_spec",
+  "id": "interface_spec-A",
+  "revision": "v2",
+  "interface_revision": "v3",
+  "component_model": "hand-H",
+  "supplier": "供应商甲"
+}

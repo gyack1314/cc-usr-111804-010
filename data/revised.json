@@ -1,0 +1,32 @@
+{
+  "allowed_origins": [
+    "https://local-source-010.example.test"
+  ],
+  "sources": [
+    {
+      "url": "https://local-source-010.example.test/records/interface_spec-A",
+      "kind": "interface_spec",
+      "required": true
+    },
+    {
+      "url": "https://local-source-010.example.test/records/component_report-B",
+      "kind": "component_report",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "https://local-source-010.example.test/records/interface_spec-A",
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "response": {
+        "file": "source-revised.bin",
+        "status": 200,
+        "bytes": 169,
+        "sha256": "8e20c80ecde376b27d28b2e868c5ba8cbdd49cce6f8fef9b5be3a5ae811ea850"
+      }
+    }
+  ]
+}
