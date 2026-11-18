@@ -1,4 +1,4 @@
-"""A transport receipt does not by itself close the business source frontier."""
+"""来源取得不等于业务资料范围闭合。"""
 import tempfile
 import unittest
 from pathlib import Path
@@ -19,3 +19,4 @@ class VerifiedFrontier(unittest.TestCase):
             self.assertEqual(coverage(c,'sample')['unverified_required'],[])
             release_verified(c,'sample')
             c.close()
+

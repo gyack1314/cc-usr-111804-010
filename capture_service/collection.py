@@ -54,7 +54,7 @@ def progress(connection, collection):
                 (collection,))]
 
 def coverage(connection, collection):
-    """Report transport progress and which declared sources are business verified."""
+    """区分来源接收进度与已核实的业务资料范围。"""
     initialize(connection)
     rows = connection.execute(
         'SELECT s.source_url,s.source_kind,s.required,COUNT(p.body_sha256) '
@@ -77,3 +77,4 @@ def coverage(connection, collection):
             'unverified_required': [item['url'] for item in sources
                                     if item['required'] and not item['verified']],
             'sources': sources}
+
