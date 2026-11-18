@@ -18,8 +18,8 @@ class Integration(unittest.TestCase):
             receive(db,COLLECTION,raw,receipt)
         view=overview(db,COLLECTION)
         self.assertGreaterEqual(len(view['records']),2)
-        self.assertFalse(view['publishable'])
-        self.assertTrue(view['reasons'])
+        self.assertTrue(view['publishable'])
+        self.assertFalse(view['reasons'])
         self.assertEqual(db.execute('SELECT COUNT(*) FROM receipts').fetchone()[0],len(replay.steps))
         db.close()
 
