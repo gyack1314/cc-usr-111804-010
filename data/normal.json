@@ -29,5 +29,17 @@
         "sha256": "ed496e1679f17f78b593e9f17539a855aec6b95dda6456cbbc6e8a6672412941"
       }
     }
+  ],
+  "sources": [
+    {
+      "url": "https://local-source-010.example.test/records/interface_spec-A",
+      "kind": "interface_spec",
+      "required": true
+    },
+    {
+      "url": "https://local-source-010.example.test/records/component_report-B",
+      "kind": "component_report",
+      "required": true
+    }
   ]
 }

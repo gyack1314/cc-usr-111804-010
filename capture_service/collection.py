@@ -1,17 +1,36 @@
-"""接收冻结来源，并持久记录每份原文的进度。"""
+"""按来源清单接收原文，持久保存待收范围与接收进度。"""
+import json
+from pathlib import Path
 from .transport import Replay
 from .ledger import receive
 
 def initialize(connection):
+    connection.execute("""CREATE TABLE IF NOT EXISTS collection_sources (
+      collection TEXT NOT NULL, source_url TEXT NOT NULL,
+      source_kind TEXT NOT NULL, required INTEGER NOT NULL,
+      PRIMARY KEY(collection, source_url))""")
     connection.execute("""CREATE TABLE IF NOT EXISTS collection_progress (
       collection TEXT NOT NULL, source_url TEXT NOT NULL,
       body_sha256 TEXT NOT NULL, received_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY(collection, source_url, body_sha256))""")
     connection.commit()
 
+def register_sources(connection, collection, manifest_path):
+    """来源目录保留尚未取得的项目；来源身份变动要先更新目录。"""
+    initialize(connection)
+    manifest = json.loads(Path(manifest_path).read_text(encoding='utf-8'))
+    sources = manifest.get('sources', [])
+    with connection:
+        for source in sources:
+            connection.execute(
+                'INSERT INTO collection_sources(collection,source_url,source_kind,required) '
+                'VALUES(?,?,?,?) ON CONFLICT(collection,source_url) DO UPDATE SET '
+                'source_kind=excluded.source_kind,required=excluded.required',
+                (collection, source['url'], source['kind'], int(source.get('required', True))))
+
 def collect(connection, collection, manifest_path):
     """按清单重放来源，重启后接续已经接收的相同字节。"""
-    initialize(connection)
+    register_sources(connection, collection, manifest_path)
     replay = Replay(manifest_path)
     result = []
     for step in replay.steps:
@@ -31,3 +50,17 @@ def progress(connection, collection):
             for row in connection.execute(
                 'SELECT source_url,body_sha256,received_at FROM collection_progress WHERE collection=? ORDER BY source_url',
                 (collection,))]
+
+def coverage(connection, collection):
+    """以来源目录为准区分已接收、待接收和非必需资料。"""
+    initialize(connection)
+    rows = connection.execute(
+        'SELECT s.source_url,s.source_kind,s.required,COUNT(p.body_sha256) '
+        'FROM collection_sources s LEFT JOIN collection_progress p '
+        'ON p.collection=s.collection AND p.source_url=s.source_url '
+        'WHERE s.collection=? GROUP BY s.source_url,s.source_kind,s.required ORDER BY s.source_url',
+        (collection,)).fetchall()
+    return {'expected': len(rows), 'received': sum(bool(row[3]) for row in rows),
+            'missing_required': [row[0] for row in rows if row[2] and not row[3]],
+            'sources': [dict(url=row[0], kind=row[1], required=bool(row[2]),
+                             received_versions=row[3]) for row in rows]}
