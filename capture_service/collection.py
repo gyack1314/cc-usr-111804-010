@@ -1,6 +1,6 @@
+"""按来源清单接收原文，持久保存待收范围与接收进度。"""
 from .ledger import entities
 from .domain import assess
-"""按来源清单接收原文，持久保存待收范围与接收进度。"""
 import json
 from pathlib import Path
 from .transport import Replay
@@ -70,7 +70,9 @@ def coverage(connection, collection):
         sources.append(dict(url=url, kind=kind, required=bool(required),
                             received_versions=received,
                             verified=any(digest in verified for digest, in connection.execute(
-                                'SELECT body_sha256 FROM collection_progress WHERE collection=? AND source_url=?',
+                                'SELECT p.body_sha256 FROM collection_progress p JOIN receipts r '
+                                'ON r.collection=p.collection AND r.body_sha256=p.body_sha256 '
+                                'WHERE p.collection=? AND p.source_url=? AND r.source_url=p.source_url',
                                 (collection, url)))))
     return {'expected': len(rows), 'received': sum(bool(row[3]) for row in rows),
             'missing_required': [row[0] for row in rows if row[2] and not row[3]],
